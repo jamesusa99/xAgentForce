@@ -1,86 +1,102 @@
-"use client";
+'use client'
 
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { Star, ChevronRight } from "lucide-react";
-import type { Agent } from "@/data/agents";
-import { cn } from "@/lib/utils";
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { ArrowRight, Star, Plus, Check } from 'lucide-react'
+import type { Agent } from '@/data/agents'
+import { useWorkspace } from '@/context/WorkspaceContext'
 
 interface AgentCardProps {
-  agent: Agent;
-  index?: number;
+  agent: Agent
+  index?: number
+  size?: 'default' | 'large'
 }
 
-export function AgentCard({ agent, index = 0 }: AgentCardProps) {
+export function AgentCard({ agent, index = 0, size = 'default' }: AgentCardProps) {
+  const isLarge = size === 'large'
+  const { addToWorkspace, isInWorkspace } = useWorkspace()
+  const inWorkspace = isInWorkspace(agent.id)
+
+  const handleAddToWorkspace = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    addToWorkspace(agent)
+  }
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.4, delay: index * 0.05 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.05, duration: 0.4 }}
+      whileHover={{ y: -4, transition: { duration: 0.2 } }}
+      className={`group ${isLarge ? 'md:col-span-2 md:row-span-2' : ''}`}
     >
-      <Link href={`/agents/${agent.id}`}>
-        <div className="group glass rounded-2xl p-6 h-full glass-hover flex flex-col cursor-pointer overflow-hidden">
-          {/* Header */}
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-force-gold/20 to-electric-blue/20 flex items-center justify-center text-2xl border border-white/5">
-                {agent.avatar}
-              </div>
-              <div>
-                <h3 className="font-display font-semibold text-white group-hover:text-force-gold transition-colors">
-                  {agent.name}
-                </h3>
-                <p className="text-sm text-slate-500">{agent.title}</p>
-              </div>
+      <Link href={`/agents/${agent.id}`} className="block h-full relative">
+        <div className="glass rounded-2xl p-6 border border-white/10 hover:border-force-gold/30 transition-all duration-300 h-full flex flex-col">
+          <div className="flex items-start gap-4 mb-4">
+            <div
+              className={`flex-shrink-0 rounded-xl bg-gradient-to-br from-force-gold/20 to-electric-blue/20 flex items-center justify-center ${
+                isLarge ? 'w-16 h-16 text-3xl' : 'w-12 h-12 text-2xl'
+              }`}
+            >
+              {agent.avatar}
             </div>
-            <ChevronRight className="w-5 h-5 text-slate-500 group-hover:text-force-gold group-hover:translate-x-1 transition-all flex-shrink-0" />
+            <div className="flex-1 min-w-0">
+              <h3 className="font-display font-semibold text-lg truncate">{agent.name}</h3>
+              <p className="text-sm text-force-gold">{agent.title}</p>
+            </div>
           </div>
 
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2 mt-4">
+          <div className="flex flex-wrap gap-1.5 mb-4">
             {agent.tags.map((tag) => (
               <span
                 key={tag}
-                className={cn(
-                  "text-xs px-2 py-1 rounded-md",
-                  tag.includes("BingoAI")
-                    ? "bg-force-gold/20 text-force-gold border border-force-gold/30"
-                    : "bg-white/5 text-slate-400 border border-white/5"
-                )}
+                className="px-2 py-0.5 rounded-full text-xs bg-force-gold/20 text-force-gold border border-force-gold/30"
               >
                 {tag}
               </span>
             ))}
           </div>
 
-          {/* Skills */}
-          <ul className="mt-4 space-y-2 flex-1">
+          <ul className="space-y-1.5 mb-6 flex-1">
             {agent.skills.slice(0, 3).map((skill) => (
-              <li key={skill} className="text-sm text-slate-400 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-force-gold/60" />
+              <li key={skill} className="text-sm text-white/70 flex items-center gap-2">
+                <span className="w-1 h-1 rounded-full bg-force-gold" />
                 {skill}
               </li>
             ))}
           </ul>
 
-          {/* Footer: Rating & CTA */}
-          <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
-            {agent.rating && (
-              <div className="flex items-center gap-1.5 text-slate-500">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-4 border-t border-white/10">
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
                 <Star className="w-4 h-4 fill-force-gold text-force-gold" />
-                <span className="text-sm font-medium text-slate-400">{agent.rating}</span>
-                {agent.reviews && (
-                  <span className="text-xs text-slate-600">({agent.reviews} 评价)</span>
-                )}
+                <span className="text-sm font-medium">{agent.rating}</span>
               </div>
-            )}
-            <span className="text-sm font-medium text-force-gold group-hover:underline">
-              查看简历 →
-            </span>
+              <span className="text-xs text-white/50">({agent.reviews} 评价)</span>
+            </div>
+            <div className="flex items-center justify-between sm:justify-end gap-2">
+              <button
+                onClick={handleAddToWorkspace}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors shrink-0 ${
+                  inWorkspace
+                    ? 'bg-force-gold/30 text-force-gold border border-force-gold/50'
+                    : 'bg-force-gold/20 text-force-gold hover:bg-force-gold/30 border border-force-gold/30'
+                }`}
+                title={inWorkspace ? '已在工作区' : '加入工作区'}
+              >
+                {inWorkspace ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                {inWorkspace ? '已加入' : 'Add to Workspace'}
+              </button>
+              <span className="flex items-center gap-1 text-force-gold font-semibold">
+                ${agent.price}/月
+                <ArrowRight className="w-4 h-4" />
+              </span>
+            </div>
           </div>
         </div>
       </Link>
     </motion.article>
-  );
+  )
 }

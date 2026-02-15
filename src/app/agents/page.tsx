@@ -1,14 +1,16 @@
-import { AgentMarketplace } from "@/components/AgentMarketplace";
+import { AgentMarketplace } from '@/components/AgentMarketplace'
+import { Footer } from '@/components/Footer'
 
 export const metadata = {
-  title: "Agent 货架 | xAgentForce",
-  description: "在数字人才库中筛选垂直领域 Agent，即插即用",
-};
+  title: 'Agent 市场 | xAgentForce',
+  description: '浏览我们的数字人才库，挑选符合业务场景的垂直领域 Agent。',
+}
 
 export default function AgentsPage() {
   return (
-    <div className="pt-24">
+    <main className="pt-16">
       <AgentMarketplace />
-    </div>
-  );
+      <Footer />
+    </main>
+  )
 }
