@@ -126,4 +126,17 @@ export const agents: Agent[] = [
     reviews: 112,
     mentionName: '直播专家',
   },
+  {
+    id: '9',
+    name: 'James',
+    title: '税务律师',
+    category: '财务',
+    avatar: '💼',
+    tags: ['BingoAI 认证', 'Top Performer', '7x24 在线'],
+    skills: ['跨国税务筹划', '税务合规审查', '税务争议解决'],
+    price: 649,
+    rating: 4.92,
+    reviews: 52,
+    mentionName: '税务专家',
+  },
 ]

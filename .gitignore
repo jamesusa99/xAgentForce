@@ -1,32 +1,47 @@
-# Dependencies
-node_modules/
-.pnp
-.pnp.js
-
-# Build
-.next/
-out/
-build/
-dist/
-
-# Env
-.env
-.env*.local
-
-# Debug & logs
+# Logs
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# OS
+
+# 依赖包
+node_modules/
+
+# 编译产物
+.next/
+out/
+build/
+
+
+# 环境密钥（千万不能上传！）
+.env*
+
+# 大文件类型
+*.mp4
+*.zip
+*.tar.gz
+*.exe
+*.dmg
+/public/videos/  # 如果你的视频放在这个文件夹
+
+# OS 文件
 .DS_Store
-Thumbs.db
 
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
 
-# Vercel
-.vercel
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

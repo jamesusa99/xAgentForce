@@ -5,18 +5,21 @@ import { motion } from 'framer-motion'
 import { Zap, Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import { useWorkspace } from '@/context/WorkspaceContext'
-
-const navLinks = [
-  { href: '/agents', label: 'Agent 市场' },
-  { href: '/workspace', label: 'My Workspace' },
-  { href: '/pricing', label: '定价' },
-  { href: '/hub', label: 'Agent Hub' },
-  { href: '/dashboard', label: '控制台' },
-]
+import { useLanguage } from '@/context/LanguageContext'
+import { LanguageSwitcher } from './LanguageSwitcher'
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const { workspaceAgents } = useWorkspace()
+  const { t } = useLanguage()
+
+  const navLinks = [
+    { href: '/agents', label: t('nav.agents') },
+    { href: '/workspace', label: t('nav.workspace') },
+    { href: '/pricing', label: t('nav.pricing') },
+    { href: '/hub', label: t('nav.hub') },
+    { href: '/dashboard', label: t('nav.dashboard') },
+  ]
 
   return (
     <motion.header
@@ -36,7 +39,7 @@ export function Header() {
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -53,6 +56,7 @@ export function Header() {
                 )}
               </Link>
             ))}
+            <LanguageSwitcher />
           </div>
 
           <div className="hidden md:flex items-center gap-4">
@@ -60,23 +64,26 @@ export function Header() {
               href="/dashboard"
               className="text-sm font-medium text-white/80 hover:text-force-gold transition-colors"
             >
-              登录
+              {t('nav.login')}
             </Link>
             <Link
               href="/agents"
               className="px-4 py-2 rounded-lg bg-force-gold text-deep-space font-semibold hover:bg-force-gold/90 transition-colors"
             >
-              开始雇佣
+              {t('nav.hireNow')}
             </Link>
           </div>
 
-          <button
-            className="md:hidden p-2 text-white/80"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
-          >
-            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div className="md:hidden flex items-center gap-2">
+            <LanguageSwitcher />
+            <button
+              className="p-2 text-white/80"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
 
         {mobileOpen && (
@@ -107,7 +114,7 @@ export function Header() {
                 className="px-4 py-2 rounded-lg bg-force-gold text-deep-space font-semibold text-center"
                 onClick={() => setMobileOpen(false)}
               >
-                开始雇佣
+                {t('nav.hireNow')}
               </Link>
             </div>
           </motion.div>

@@ -6,9 +6,11 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, LayoutGrid, ChevronUp } from 'lucide-react'
 import { useWorkspace } from '@/context/WorkspaceContext'
+import { useLanguage } from '@/context/LanguageContext'
 
 export function WorkspaceTray() {
   const { workspaceAgents, removeFromWorkspace } = useWorkspace()
+  const { t, tAgentTitle } = useLanguage()
   const [expanded, setExpanded] = useState(true)
   const pathname = usePathname()
 
@@ -29,9 +31,9 @@ export function WorkspaceTray() {
           >
             <div className="flex items-center gap-2">
               <LayoutGrid className="w-5 h-5 text-force-gold" />
-              <span className="font-display font-semibold">工作区托盘</span>
+              <span className="font-display font-semibold">{t('workspace.tray')}</span>
               <span className="px-2 py-0.5 rounded-full text-xs bg-force-gold/30 text-force-gold">
-                {workspaceAgents.length} 名 Agent
+                {workspaceAgents.length} {t('workspace.agentsCount')}
               </span>
             </div>
             <ChevronUp
@@ -56,12 +58,12 @@ export function WorkspaceTray() {
                       <span className="text-2xl">{agent.avatar}</span>
                       <div>
                         <p className="text-sm font-medium">{agent.name}</p>
-                        <p className="text-xs text-white/50">{agent.title}</p>
+                        <p className="text-xs text-white/50">{tAgentTitle(agent.title)}</p>
                       </div>
                       <button
                         onClick={() => removeFromWorkspace(agent.id)}
                         className="absolute -top-1 -right-1 p-1 rounded-full bg-red-500/80 text-white opacity-0 group-hover:opacity-100 transition-opacity"
-                        aria-label="移出工作区"
+                        aria-label={t('workspace.removeFromWorkspace')}
                       >
                         <X className="w-3 h-3" />
                       </button>
@@ -73,7 +75,7 @@ export function WorkspaceTray() {
                     href="/workspace"
                     className="block w-full py-3 rounded-xl bg-force-gold text-deep-space font-semibold text-center hover:bg-force-gold/90 transition-colors"
                   >
-                    进入 xWorkSpace
+                    {t('workspace.enterWorkspace')}
                   </Link>
                 </div>
               </motion.div>

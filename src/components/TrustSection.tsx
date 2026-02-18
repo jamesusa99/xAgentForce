@@ -2,32 +2,26 @@
 
 import { motion } from 'framer-motion'
 import { Users, Clock, TrendingDown, Shield } from 'lucide-react'
+import { useLanguage } from '@/context/LanguageContext'
 
-const stats = [
-  {
-    icon: Users,
-    value: '12,000+',
-    label: '已派遣 Agent 数量',
-  },
-  {
-    icon: Clock,
-    value: '2.4M',
-    label: '累计工作小时',
-  },
-  {
-    icon: TrendingDown,
-    value: '68%',
-    label: '平均为客户降低的成本',
-  },
-]
-
-const partners = [
-  { name: 'UESTC', desc: '电子科技大学研究合作' },
-  { name: 'IEEE', desc: '会员身份' },
-  { name: 'BingoAI', desc: '技术认证伙伴' },
-]
+const icons = [Users, Clock, TrendingDown]
+const values = ['12,000+', '2.4M', '68%']
 
 export function TrustSection() {
+  const { t } = useLanguage()
+
+  const stats = [
+    { icon: icons[0], value: values[0], labelKey: 'trust.stats.0.label' },
+    { icon: icons[1], value: values[1], labelKey: 'trust.stats.1.label' },
+    { icon: icons[2], value: values[2], labelKey: 'trust.stats.2.label' },
+  ]
+
+  const partners = [
+    { name: 'UESTC', descKey: 'trust.partnerDesc.UESTC' },
+    { name: 'IEEE', descKey: 'trust.partnerDesc.IEEE' },
+    { name: 'BingoAI', descKey: 'trust.partnerDesc.BingoAI' },
+  ]
+
   return (
     <section className="py-24 px-4">
       <div className="max-w-7xl mx-auto">
@@ -38,14 +32,13 @@ export function TrustSection() {
           className="text-center mb-16"
         >
           <h2 className="font-display font-bold text-3xl sm:text-4xl lg:text-5xl mb-4">
-            信任背书
+            {t('trust.title')}
           </h2>
           <p className="text-white/70 max-w-2xl mx-auto">
-            数据说话，权威背书，打造值得信赖的数字劳务派遣平台
+            {t('trust.subtitle')}
           </p>
         </motion.div>
 
-        {/* Stats Dashboard */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -55,7 +48,7 @@ export function TrustSection() {
         >
           {stats.map((stat, index) => (
             <motion.div
-              key={stat.label}
+              key={stat.labelKey}
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
@@ -66,12 +59,11 @@ export function TrustSection() {
               <div className="font-display font-bold text-4xl lg:text-5xl text-force-gold mb-2">
                 {stat.value}
               </div>
-              <p className="text-white/70">{stat.label}</p>
+              <p className="text-white/70">{t(stat.labelKey)}</p>
             </motion.div>
           ))}
         </motion.div>
 
-        {/* Partners */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -80,7 +72,7 @@ export function TrustSection() {
         >
           <div className="flex items-center gap-2 mb-8">
             <Shield className="w-5 h-5 text-force-gold" />
-            <h3 className="font-display font-semibold text-lg">合作伙伴与背书</h3>
+            <h3 className="font-display font-semibold text-lg">{t('trust.partners')}</h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {partners.map((partner, index) => (
@@ -95,7 +87,7 @@ export function TrustSection() {
                 <div className="font-display font-bold text-xl text-white mb-1">
                   {partner.name}
                 </div>
-                <p className="text-sm text-white/60">{partner.desc}</p>
+                <p className="text-sm text-white/60">{t(partner.descKey)}</p>
               </motion.div>
             ))}
           </div>

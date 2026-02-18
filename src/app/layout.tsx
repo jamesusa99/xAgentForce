@@ -4,6 +4,7 @@ import './globals.css'
 import { Header } from '@/components/Header'
 import { WorkspaceProvider } from '@/context/WorkspaceContext'
 import { WorkspaceTray } from '@/components/WorkspaceTray'
+import { LanguageProvider } from '@/context/LanguageContext'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -17,8 +18,9 @@ const montserrat = Montserrat({
 })
 
 export const metadata: Metadata = {
-  title: 'xAgentForce | 雇佣你的全能数字员工',
-  description: '告别复杂的工具调试。在我们的数字人才库中筛选垂直领域 Agent，即插即用，按需订阅。',
+  title: 'xAgentForce | Hire Your All-in-One Digital Workforce',
+  description:
+    'Skip the complex tool setup. Browse our digital talent pool, pick vertical Agents, plug & play, subscribe on demand.',
 }
 
 export default function RootLayout({
@@ -27,13 +29,20 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh-CN" className={`${inter.variable} ${montserrat.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${montserrat.variable}`}>
       <body className="font-sans">
-        <WorkspaceProvider>
-          <Header />
-          {children}
-          <WorkspaceTray />
-        </WorkspaceProvider>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var s=localStorage.getItem('xagentforce-locale');if(s==='zh')document.documentElement.lang='zh-CN';}catch(e){}})()`,
+          }}
+        />
+        <LanguageProvider>
+          <WorkspaceProvider>
+            <Header />
+            {children}
+            <WorkspaceTray />
+          </WorkspaceProvider>
+        </LanguageProvider>
       </body>
     </html>
   )

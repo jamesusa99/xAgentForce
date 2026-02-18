@@ -15,14 +15,9 @@ import {
   CheckCircle2,
 } from 'lucide-react'
 import { useWorkspace } from '@/context/WorkspaceContext'
+import { useLanguage } from '@/context/LanguageContext'
 import { agents } from '@/data/agents'
 import { Footer } from '@/components/Footer'
-
-const STATUS_LABELS = {
-  idle: { label: '待命', color: 'text-white/60', dot: 'bg-white/40' },
-  processing: { label: '处理中', color: 'text-force-gold', dot: 'bg-force-gold animate-pulse' },
-  completed: { label: '已完成', color: 'text-green-400', dot: 'bg-green-400' },
-}
 
 // Mock output for demo - in real app this would come from API
 const MOCK_OUTPUTS: Record<string, string> = {
@@ -40,6 +35,7 @@ function getMockOutput(task: string, agentTitle: string): string {
 }
 
 export default function WorkspacePage() {
+  const { t, tAgentTitle } = useLanguage()
   const {
     workspaceAgents,
     removeFromWorkspace,
@@ -49,6 +45,12 @@ export default function WorkspacePage() {
     acceptOutput,
     reviseOutput,
   } = useWorkspace()
+
+  const statusLabels = {
+    idle: { label: t('statusLabels.idle'), color: 'text-white/60', dot: 'bg-white/40' },
+    processing: { label: t('statusLabels.processing'), color: 'text-force-gold', dot: 'bg-force-gold animate-pulse' },
+    completed: { label: t('statusLabels.completed'), color: 'text-green-400', dot: 'bg-green-400' },
+  }
 
   const [taskInput, setTaskInput] = useState('')
   const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null)
@@ -104,14 +106,14 @@ export default function WorkspacePage() {
           <div className="glass rounded-3xl p-12 mb-8">
             <h1 className="font-display font-bold text-3xl mb-4">xWorkSpace</h1>
             <p className="text-white/70 mb-8">
-              您的工作区暂无 Agent。请前往 Agent 市场，点击「Add to Workspace」将数字员工加入工作区。
+              {t('workspace.emptyDesc')}
             </p>
             <Link
               href="/agents"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-force-gold text-deep-space font-semibold hover:bg-force-gold/90 transition-colors"
             >
               <Plus className="w-5 h-5" />
-              前往 Agent 市场
+              {t('workspace.goToMarketplace')}
             </Link>
           </div>
         </div>
@@ -128,7 +130,7 @@ export default function WorkspacePage() {
           <div className="flex items-center justify-between gap-4">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-sm font-medium text-white/70">任务完成进度</span>
+                <span className="text-sm font-medium text-white/70">{t('workspacePage.progressLabel')}</span>
                 <span className="text-sm text-force-gold font-semibold">{progressPercent}%</span>
               </div>
               <div className="h-2 rounded-full bg-white/10 overflow-hidden">
@@ -150,7 +152,7 @@ export default function WorkspacePage() {
               }`}
             >
               <ShoppingCart className="w-5 h-5" />
-              Checkout 交付
+              {t('workspacePage.checkoutDelivery')}
               {acceptedOutputs.length > 0 && (
                 <span className="px-2 py-0.5 rounded-full bg-deep-space/50 text-xs">
                   {acceptedOutputs.length}
@@ -169,11 +171,11 @@ export default function WorkspacePage() {
             <div className="glass rounded-2xl p-4 h-full">
               <h2 className="font-display font-semibold mb-4 flex items-center gap-2">
                 <Circle className="w-2 h-2 fill-force-gold text-force-gold" />
-                在职 Agent
+                {t('workspacePage.agentsList')}
               </h2>
               <div className="space-y-2">
                 {workspaceAgents.map((agent) => {
-                  const status = STATUS_LABELS[agent.status]
+                  const status = statusLabels[agent.status]
                   return (
                     <div
                       key={agent.id}
@@ -192,7 +194,7 @@ export default function WorkspacePage() {
                       <button
                         onClick={() => removeFromWorkspace(agent.id)}
                         className="p-1 rounded-lg text-white/40 hover:text-red-400 hover:bg-red-500/20"
-                        aria-label="移出"
+                        aria-label={t('workspacePage.remove')}
                       >
                         <X className="w-4 h-4" />
                       </button>
@@ -205,7 +207,7 @@ export default function WorkspacePage() {
                 className="mt-4 flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed border-white/20 text-white/60 hover:border-force-gold/40 hover:text-force-gold transition-colors"
               >
                 <Plus className="w-4 h-4" />
-                雇佣更多 Agent
+                {t('workspacePage.hireMore')}
               </Link>
             </div>
           </div>
@@ -213,9 +215,9 @@ export default function WorkspacePage() {
           {/* Center: Task input */}
           <div className="lg:col-span-5">
             <div className="glass rounded-2xl p-6 h-full flex flex-col">
-              <h2 className="font-display font-semibold mb-4">任务分发区</h2>
+              <h2 className="font-display font-semibold mb-4">{t('workspacePage.taskArea')}</h2>
               <p className="text-sm text-white/60 mb-4">
-                输入需求，支持 @Agent名 协作。例如：@数据专家 提取卖点，然后交给 @文案专家 生成脚本
+                {t('workspacePage.taskHint')}
               </p>
 
               {/* @mention chips */}
@@ -246,7 +248,7 @@ export default function WorkspacePage() {
               <textarea
                 value={taskInput}
                 onChange={(e) => setTaskInput(e.target.value)}
-                placeholder="例如：分析这组电商数据... 或 生成下周的小红书文案"
+                placeholder={t('workspacePage.taskPlaceholder')}
                 className="flex-1 min-h-[120px] w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-force-gold/50 resize-none"
                 rows={4}
               />
@@ -257,10 +259,10 @@ export default function WorkspacePage() {
                   onChange={(e) => setSelectedAgentId(e.target.value || null)}
                   className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-force-gold/50"
                 >
-                  <option value="">选择执行 Agent</option>
+                  <option value="">{t('workspacePage.selectAgent')}</option>
                   {workspaceAgents.map((a) => (
                     <option key={a.id} value={a.id}>
-                      {a.name} - {a.title}
+                      {a.name} - {tAgentTitle(a.title)}
                     </option>
                   ))}
                 </select>
@@ -274,7 +276,7 @@ export default function WorkspacePage() {
                   ) : (
                     <Send className="w-5 h-5" />
                   )}
-                  分发任务
+                  {t('workspacePage.dispatchTask')}
                 </button>
               </div>
             </div>
@@ -285,13 +287,13 @@ export default function WorkspacePage() {
             <div className="glass rounded-2xl p-6 h-full flex flex-col overflow-hidden">
               <h2 className="font-display font-semibold mb-4 flex items-center gap-2">
                 <CheckCircle2 className="w-5 h-5 text-force-gold" />
-                实时产出区
+                {t('workspacePage.outputArea')}
               </h2>
               <div className="flex-1 overflow-y-auto space-y-4 pr-2">
                 {taskOutputs.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-48 text-white/40">
-                    <p>Agent 的产出将显示在此处</p>
-                    <p className="text-sm mt-1">请在左侧分发任务</p>
+                    <p>{t('workspacePage.outputEmpty')}</p>
+                    <p className="text-sm mt-1">{t('workspacePage.outputHint')}</p>
                   </div>
                 ) : (
                   taskOutputs.map((output) => (
@@ -321,14 +323,14 @@ export default function WorkspacePage() {
                           }`}
                         >
                           <Check className="w-4 h-4" />
-                          Accept 通过
+                          {t('workspacePage.accept')}
                         </button>
                         <button
                           onClick={() => handleRevise(output.id)}
                           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-white/10 hover:bg-amber-500/20 text-white/80 transition-colors"
                         >
                           <RotateCcw className="w-4 h-4" />
-                          Revise 修改
+                          {t('workspacePage.revise')}
                         </button>
                       </div>
                     </motion.div>
@@ -352,9 +354,9 @@ export default function WorkspacePage() {
             className="flex items-center gap-2 px-6 py-4 rounded-2xl bg-force-gold text-deep-space font-bold shadow-xl shadow-force-gold/30 hover:bg-force-gold/90 transition-all hover:scale-105"
           >
             <ShoppingCart className="w-6 h-6" />
-            Checkout 交付
+            {t('workspacePage.checkoutDelivery')}
             <span className="px-2 py-0.5 rounded-full bg-deep-space/30 text-sm">
-              {acceptedOutputs.length} 项
+              {acceptedOutputs.length} {t('workspacePage.items')}
             </span>
           </button>
         </motion.div>
@@ -366,6 +368,8 @@ export default function WorkspacePage() {
           acceptedOutputs={acceptedOutputs}
           workspaceAgents={workspaceAgents}
           onClose={() => setShowCheckout(false)}
+          t={t}
+          tAgentTitle={tAgentTitle}
         />
       )}
 
@@ -378,12 +382,14 @@ function CheckoutModal({
   acceptedOutputs,
   workspaceAgents,
   onClose,
-  onCheckoutComplete,
+  t,
+  tAgentTitle,
 }: {
   acceptedOutputs: { agentId: string; agentName: string; output: string; taskContent: string }[]
   workspaceAgents: { id: string; name: string; title: string; price: number; avatar: string }[]
   onClose: () => void
-  onCheckoutComplete?: () => void
+  t: (path: string) => string
+  tAgentTitle: (key: string) => string
 }) {
   const [checkoutComplete, setCheckoutComplete] = useState(false)
 
@@ -406,7 +412,6 @@ function CheckoutModal({
 
   const handleConfirmCheckout = () => {
     setCheckoutComplete(true)
-    onCheckoutComplete?.()
     // In real app: generate delivery package, send email
   }
 
@@ -421,15 +426,15 @@ function CheckoutModal({
           <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-6">
             <Check className="w-8 h-8 text-green-400" />
           </div>
-          <h2 className="font-display font-bold text-2xl mb-2">交付完成</h2>
+          <h2 className="font-display font-bold text-2xl mb-2">{t('workspacePage.deliveryComplete')}</h2>
           <p className="text-white/70 mb-6">
-            交付包（PDF、Excel）已生成，将发送至您的注册邮箱。
+            {t('workspacePage.deliveryDesc')}
           </p>
           <button
             onClick={onClose}
             className="px-8 py-3 rounded-xl bg-force-gold text-deep-space font-semibold"
           >
-            关闭
+            {t('workspacePage.close')}
           </button>
         </motion.div>
       </div>
@@ -443,8 +448,8 @@ function CheckoutModal({
         animate={{ scale: 1, opacity: 1 }}
         className="glass-strong rounded-3xl p-8 max-w-lg w-full my-8"
       >
-        <h2 className="font-display font-bold text-2xl mb-2">Checkout 结算清单</h2>
-        <p className="text-white/60 text-sm mb-6">劳务派遣结算 · 交付即满意</p>
+        <h2 className="font-display font-bold text-2xl mb-2">{t('workspacePage.checkoutTitle')}</h2>
+        <p className="text-white/60 text-sm mb-6">{t('workspacePage.checkoutSubtitle')}</p>
 
         <div className="space-y-4 mb-8">
           {summary.map(({ agent, count }) => (
@@ -455,8 +460,8 @@ function CheckoutModal({
               <div className="flex items-center gap-3">
                 <span className="text-2xl">{agent.avatar}</span>
                 <div>
-                  <p className="font-medium">{agent.title}</p>
-                  <p className="text-sm text-white/50">{count} 项任务已确认</p>
+                  <p className="font-medium">{tAgentTitle(agent.title)}</p>
+                  <p className="text-sm text-white/50">{count} {t('workspacePage.tasksConfirmed')}</p>
                 </div>
               </div>
               <span className="font-semibold text-force-gold">
@@ -467,7 +472,7 @@ function CheckoutModal({
         </div>
 
         <div className="flex items-center justify-between py-4 border-t border-white/10 mb-6">
-          <span className="font-semibold">合计</span>
+          <span className="font-semibold">{t('workspacePage.total')}</span>
           <span className="font-display font-bold text-xl text-force-gold">
             ${totalPrice.toFixed(0)}
           </span>
@@ -478,13 +483,13 @@ function CheckoutModal({
             onClick={onClose}
             className="flex-1 py-3 rounded-xl border border-white/20 text-white/80 hover:bg-white/5"
           >
-            返回修改
+            {t('workspacePage.backToEdit')}
           </button>
           <button
             onClick={handleConfirmCheckout}
             className="flex-1 py-3 rounded-xl bg-force-gold text-deep-space font-semibold hover:bg-force-gold/90"
           >
-            确认交付
+            {t('workspacePage.confirmDelivery')}
           </button>
         </div>
       </motion.div>

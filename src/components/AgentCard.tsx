@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ArrowRight, Star, Plus, Check } from 'lucide-react'
 import type { Agent } from '@/data/agents'
 import { useWorkspace } from '@/context/WorkspaceContext'
+import { useLanguage } from '@/context/LanguageContext'
 
 interface AgentCardProps {
   agent: Agent
@@ -15,6 +16,7 @@ interface AgentCardProps {
 export function AgentCard({ agent, index = 0, size = 'default' }: AgentCardProps) {
   const isLarge = size === 'large'
   const { addToWorkspace, isInWorkspace } = useWorkspace()
+  const { t, tAgentTitle, tAgentTag, tAgentSkill, locale } = useLanguage()
   const inWorkspace = isInWorkspace(agent.id)
 
   const handleAddToWorkspace = (e: React.MouseEvent) => {
@@ -22,6 +24,9 @@ export function AgentCard({ agent, index = 0, size = 'default' }: AgentCardProps
     e.stopPropagation()
     addToWorkspace(agent)
   }
+
+  const title = tAgentTitle(agent.title)
+  const perMonth = locale === 'zh' ? '/月' : '/mo'
 
   return (
     <motion.article
@@ -44,7 +49,7 @@ export function AgentCard({ agent, index = 0, size = 'default' }: AgentCardProps
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="font-display font-semibold text-lg truncate">{agent.name}</h3>
-              <p className="text-sm text-force-gold">{agent.title}</p>
+              <p className="text-sm text-force-gold">{title}</p>
             </div>
           </div>
 
@@ -54,7 +59,7 @@ export function AgentCard({ agent, index = 0, size = 'default' }: AgentCardProps
                 key={tag}
                 className="px-2 py-0.5 rounded-full text-xs bg-force-gold/20 text-force-gold border border-force-gold/30"
               >
-                {tag}
+                {tAgentTag(tag)}
               </span>
             ))}
           </div>
@@ -63,7 +68,7 @@ export function AgentCard({ agent, index = 0, size = 'default' }: AgentCardProps
             {agent.skills.slice(0, 3).map((skill) => (
               <li key={skill} className="text-sm text-white/70 flex items-center gap-2">
                 <span className="w-1 h-1 rounded-full bg-force-gold" />
-                {skill}
+                {tAgentSkill(skill)}
               </li>
             ))}
           </ul>
@@ -74,7 +79,9 @@ export function AgentCard({ agent, index = 0, size = 'default' }: AgentCardProps
                 <Star className="w-4 h-4 fill-force-gold text-force-gold" />
                 <span className="text-sm font-medium">{agent.rating}</span>
               </div>
-              <span className="text-xs text-white/50">({agent.reviews} 评价)</span>
+              <span className="text-xs text-white/50">
+                ({agent.reviews} {t('agentCard.reviews')})
+              </span>
             </div>
             <div className="flex items-center justify-between sm:justify-end gap-2">
               <button
@@ -84,13 +91,14 @@ export function AgentCard({ agent, index = 0, size = 'default' }: AgentCardProps
                     ? 'bg-force-gold/30 text-force-gold border border-force-gold/50'
                     : 'bg-force-gold/20 text-force-gold hover:bg-force-gold/30 border border-force-gold/30'
                 }`}
-                title={inWorkspace ? '已在工作区' : '加入工作区'}
+                title={inWorkspace ? t('agentCard.inWorkspace') : t('agentCard.addToWorkspaceTitle')}
               >
                 {inWorkspace ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-                {inWorkspace ? '已加入' : 'Add to Workspace'}
+                {inWorkspace ? t('agentCard.added') : t('agentCard.addToWorkspace')}
               </button>
               <span className="flex items-center gap-1 text-force-gold font-semibold">
-                ${agent.price}/月
+                ${agent.price}
+                {perMonth}
                 <ArrowRight className="w-4 h-4" />
               </span>
             </div>

@@ -2,6 +2,7 @@
 
 import { Plus, Check } from 'lucide-react'
 import { useWorkspace } from '@/context/WorkspaceContext'
+import { useLanguage } from '@/context/LanguageContext'
 import type { Agent } from '@/data/agents'
 import Link from 'next/link'
 
@@ -12,6 +13,7 @@ interface AddToWorkspaceButtonProps {
 
 export function AddToWorkspaceButton({ agent, variant = 'card' }: AddToWorkspaceButtonProps) {
   const { addToWorkspace, isInWorkspace } = useWorkspace()
+  const { t } = useLanguage()
   const inWorkspace = isInWorkspace(agent.id)
 
   if (variant === 'profile') {
@@ -27,13 +29,13 @@ export function AddToWorkspaceButton({ agent, variant = 'card' }: AddToWorkspace
           }`}
         >
           {inWorkspace ? <Check className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
-          {inWorkspace ? '已加入工作区' : 'Add to Workspace'}
+          {inWorkspace ? t('addToWorkspace.added') : t('addToWorkspace.add')}
         </button>
         <Link
           href="/workspace"
           className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-force-gold text-deep-space font-semibold hover:bg-force-gold/90 transition-colors"
         >
-          立即聘用
+          {t('addToWorkspace.hireNow')}
         </Link>
       </div>
     )

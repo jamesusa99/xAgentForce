@@ -4,9 +4,11 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { AgentCard } from './AgentCard'
 import { agents, categories, type AgentCategory } from '@/data/agents'
+import { useLanguage } from '@/context/LanguageContext'
 
 export function AgentMarketplace() {
   const [activeCategory, setActiveCategory] = useState<AgentCategory | 'all'>('all')
+  const { t, tCategory } = useLanguage()
 
   const filteredAgents =
     activeCategory === 'all' ? agents : agents.filter((a) => a.category === activeCategory)
@@ -24,15 +26,14 @@ export function AgentMarketplace() {
           className="text-center mb-16"
         >
           <h2 className="font-display font-bold text-3xl sm:text-4xl lg:text-5xl mb-4">
-            Agent 市场
+            {t('marketplace.title')}
           </h2>
           <p className="text-white/70 max-w-2xl mx-auto">
-            在我们的数字人才库中挑选符合业务场景的垂直领域 Agent，每一个都经过 BingoAI 认证。
+            {t('marketplace.subtitle')}
           </p>
         </motion.div>
 
         <div className="flex flex-col lg:flex-row gap-12">
-          {/* Sidebar Categories */}
           <motion.aside
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -41,7 +42,7 @@ export function AgentMarketplace() {
           >
             <div className="glass rounded-2xl p-4 sticky top-24">
               <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-white/60 mb-4">
-                分类
+                {t('marketplace.category')}
               </h3>
               <nav className="space-y-1">
                 <button
@@ -52,7 +53,7 @@ export function AgentMarketplace() {
                       : 'text-white/70 hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  全部
+                  {t('marketplace.all')}
                 </button>
                 {categories.map((cat) => (
                   <button
@@ -64,14 +65,13 @@ export function AgentMarketplace() {
                         : 'text-white/70 hover:text-white hover:bg-white/5'
                     }`}
                   >
-                    {cat}
+                    {tCategory(cat)}
                   </button>
                 ))}
               </nav>
             </div>
           </motion.aside>
 
-          {/* Bento Grid */}
           <div className="flex-1 min-w-0">
             <motion.div
               initial={{ opacity: 0 }}
@@ -81,7 +81,6 @@ export function AgentMarketplace() {
             >
               {activeCategory === 'all' ? (
                 <>
-                  {/* Featured large card */}
                   {featuredAgents[0] && (
                     <AgentCard agent={featuredAgents[0]} index={0} size="large" />
                   )}

@@ -2,26 +2,38 @@
 
 import Link from 'next/link'
 import { Zap } from 'lucide-react'
-
-const footerLinks = {
-  产品: [
-    { href: '/agents', label: 'Agent 市场' },
-    { href: '/pricing', label: '定价' },
-    { href: '/hub', label: 'Agent Hub' },
-  ],
-  资源: [
-    { href: '/dashboard', label: '控制台' },
-    { href: '/agents', label: 'Agent 档案' },
-    { href: '#', label: '帮助中心' },
-  ],
-  公司: [
-    { href: '#', label: '关于我们' },
-    { href: '#', label: '联系我们' },
-    { href: '#', label: '隐私政策' },
-  ],
-}
+import { useLanguage } from '@/context/LanguageContext'
 
 export function Footer() {
+  const { t } = useLanguage()
+
+  const footerLinks = [
+    {
+      category: t('footer.product'),
+      links: [
+        { href: '/agents', label: t('footer.agentMarketplace') },
+        { href: '/pricing', label: t('footer.pricing') },
+        { href: '/hub', label: t('footer.agentHub') },
+      ],
+    },
+    {
+      category: t('footer.resources'),
+      links: [
+        { href: '/dashboard', label: t('footer.dashboard') },
+        { href: '/agents', label: t('footer.agentProfiles') },
+        { href: '#', label: t('footer.helpCenter') },
+      ],
+    },
+    {
+      category: t('footer.company'),
+      links: [
+        { href: '#', label: t('footer.about') },
+        { href: '#', label: t('footer.contact') },
+        { href: '#', label: t('footer.privacy') },
+      ],
+    },
+  ]
+
   return (
     <footer className="border-t border-white/10 py-16 px-4">
       <div className="max-w-7xl mx-auto">
@@ -33,11 +45,9 @@ export function Footer() {
                 xAgent<span className="text-force-gold">Force</span>
               </span>
             </Link>
-            <p className="mt-4 text-sm text-white/60">
-              雇佣你的全能数字员工。即插即用，按需订阅。
-            </p>
+            <p className="mt-4 text-sm text-white/60">{t('footer.tagline')}</p>
           </div>
-          {Object.entries(footerLinks).map(([category, links]) => (
+          {footerLinks.map(({ category, links }) => (
             <div key={category}>
               <h4 className="font-display font-semibold text-sm uppercase tracking-wider text-white/60 mb-4">
                 {category}
@@ -59,11 +69,9 @@ export function Footer() {
         </div>
         <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-sm text-white/50">
-            © {new Date().getFullYear()} xAgentForce. 数字劳务派遣平台.
+            © {new Date().getFullYear()} xAgentForce. {t('footer.copyright')}
           </p>
-          <p className="text-xs text-white/40">
-            UESTC 研究合作 · IEEE 会员 · BingoAI 认证
-          </p>
+          <p className="text-xs text-white/40">{t('footer.partners')}</p>
         </div>
       </div>
     </footer>

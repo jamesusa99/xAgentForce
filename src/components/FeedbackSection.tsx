@@ -2,29 +2,32 @@
 
 import { motion } from 'framer-motion'
 import { Quote, Star } from 'lucide-react'
-
-const testimonials = [
-  {
-    agent: '电商运营专家 Ella',
-    quote: '这个电商 Agent 帮我提升了 30% 的转化率，ROI 非常清晰。',
-    author: '某跨境电商创始人',
-    rating: 5,
-  },
-  {
-    agent: '法务合规审计 Sofia',
-    quote: '合同审核效率提升 10 倍，再也不用熬夜看条款了。',
-    author: '某 SaaS 法务负责人',
-    rating: 5,
-  },
-  {
-    agent: '私域流量分析师 Marcus',
-    quote: '社群运营和用户分层做得太到位，留存率明显改善。',
-    author: '某消费品牌增长负责人',
-    rating: 5,
-  },
-]
+import { useLanguage } from '@/context/LanguageContext'
 
 export function FeedbackSection() {
+  const { t } = useLanguage()
+
+  const testimonials = [
+    {
+      agent: t('feedback.testimonials.0.agent'),
+      quote: t('feedback.testimonials.0.quote'),
+      author: t('feedback.testimonials.0.author'),
+      rating: 5,
+    },
+    {
+      agent: t('feedback.testimonials.1.agent'),
+      quote: t('feedback.testimonials.1.quote'),
+      author: t('feedback.testimonials.1.author'),
+      rating: 5,
+    },
+    {
+      agent: t('feedback.testimonials.2.agent'),
+      quote: t('feedback.testimonials.2.quote'),
+      author: t('feedback.testimonials.2.author'),
+      rating: 5,
+    },
+  ]
+
   return (
     <section className="py-24 px-4">
       <div className="max-w-7xl mx-auto">
@@ -35,10 +38,10 @@ export function FeedbackSection() {
           className="text-center mb-16"
         >
           <h2 className="font-display font-bold text-3xl sm:text-4xl lg:text-5xl mb-4">
-            Agent 履职评价
+            {t('feedback.title')}
           </h2>
           <p className="text-white/70 max-w-2xl mx-auto">
-            来自真实雇主的反馈，每一个 Agent 都经得起考验
+            {t('feedback.subtitle')}
           </p>
         </motion.div>
 

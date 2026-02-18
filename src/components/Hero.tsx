@@ -4,25 +4,36 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
-
-const searchPlaceholders = [
-  '正在寻找：电商运营专家...',
-  '正在寻找：法务合规审计...',
-  '正在寻找：私域流量分析师...',
-  '正在寻找：多语言 SEO 专员...',
-  '正在寻找：创意内容策划...',
-  '正在寻找：财务数据分析师...',
-]
+import { useLanguage } from '@/context/LanguageContext'
 
 export function Hero() {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const { t, locale } = useLanguage()
+  const searchPlaceholders =
+    locale === 'en'
+      ? [
+          'Looking for: E-commerce specialist...',
+          'Looking for: Legal compliance auditor...',
+          'Looking for: Private traffic analyst...',
+          'Looking for: Multi-language SEO expert...',
+          'Looking for: Creative content strategist...',
+          'Looking for: Financial data analyst...',
+        ]
+      : [
+          '正在寻找：电商运营专家...',
+          '正在寻找：法务合规审计...',
+          '正在寻找：私域流量分析师...',
+          '正在寻找：多语言 SEO 专员...',
+          '正在寻找：创意内容策划...',
+          '正在寻找：财务数据分析师...',
+        ]
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % searchPlaceholders.length)
     }, 2500)
     return () => clearInterval(timer)
-  }, [])
+  }, [searchPlaceholders.length])
 
   return (
     <section className="relative min-h-[90vh] flex flex-col items-center justify-center px-4 pt-24 overflow-hidden">
@@ -40,15 +51,15 @@ export function Hero() {
         className="relative z-10 text-center max-w-4xl mx-auto"
       >
         <h1 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl xl:text-7xl tracking-tight mb-6">
-          xAgentForce：雇佣你的
+          {t('heroTitle')}
           <br />
           <span className="bg-gradient-to-r from-force-gold to-electric-blue bg-clip-text text-transparent">
-            全能数字员工
+            {t('heroTitleHighlight')}
           </span>
         </h1>
 
         <p className="text-lg sm:text-xl text-white/70 mb-12 max-w-2xl mx-auto">
-          告别复杂的工具调试。在我们的「数字人才库」中筛选垂直领域 Agent，即插即用，按需订阅。
+          {t('heroSubtitle')}
         </p>
 
         {/* Dynamic Agent Search Box */}
@@ -80,7 +91,7 @@ export function Hero() {
               href="/agents"
               className="flex-shrink-0 px-6 py-3 rounded-xl bg-force-gold text-deep-space font-semibold hover:bg-force-gold/90 transition-colors flex items-center gap-2"
             >
-              搜索 Agent
+              {t('searchAgent')}
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -92,7 +103,7 @@ export function Hero() {
           transition={{ delay: 0.6 }}
           className="mt-6 text-sm text-white/50"
         >
-          已认证 120+ 垂直领域 Agent · BingoAI 技术背书
+          {t('heroBadge')}
         </motion.p>
       </motion.div>
     </section>
